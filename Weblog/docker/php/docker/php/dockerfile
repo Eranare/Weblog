@@ -1,0 +1,29 @@
+# ./docker/php/Dockerfile
+
+FROM php:8.2-fpm
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    curl \
+    gnupg \
+    && docker-php-ext-install pdo pdo_pgsql
+
+# Install Node.js and npm
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+&& apt-get install -y nodejs
+
+# Set working directory
+WORKDIR /var/www
+
+# Copy application source code
+COPY . .
+
+# Install npm dependencies
+RUN npm install
+
+# Build assets for production
+RUN npm run build
+
+# Optional: Install Composer if needed (not mandatory if you use Composer locally)
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
