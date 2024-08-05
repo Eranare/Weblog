@@ -12,9 +12,11 @@ Route::view('/', 'home')->name('home');
 
 
 //crud routes
+
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
 Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
-
+Route::get('/articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
 //Gotta differentiate between reader and writer/admin routes for categories and articles too. 
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
