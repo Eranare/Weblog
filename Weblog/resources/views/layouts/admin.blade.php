@@ -21,6 +21,7 @@
 </head>
 <body>
     @include('admin.partials.nav')
+    @include('partials.nav')
     <div class="container mt-4">
         @yield('content')
     </div>

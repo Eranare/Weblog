@@ -10,9 +10,9 @@
 <body>
     @if(auth()->check() && auth()->user()->role == 'admin')
         @include('admin.partials.nav')
-    @else
-        @include('partials.nav')
     @endif
+        @include('partials.nav')
+
 
     <div class="container mt-4">
         @yield('content')

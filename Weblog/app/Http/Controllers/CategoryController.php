@@ -9,10 +9,7 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'admin'])->except(['index', 'show']);
-    }
+
 
     public function index()
     {
@@ -21,11 +18,11 @@ class CategoryController extends Controller
     }
 
 
-
     public function show($id)
     {
         $category = Category::findOrFail($id);
-        return view('categories.show', compact('category'));
+        $articles = $category->articles; // Get all articles related to this category
+        
+        return view('categories.show', compact('category', 'articles'));
     }
-
 }

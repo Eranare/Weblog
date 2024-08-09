@@ -12,9 +12,9 @@
     </div>
     @endif
 
-    <form action="{{route ('articles.store') }}" method="POST">
+    <form action="{{route ('admin.articles.store') }}" method="POST">
         @csrf
-
+        Premium article: <input type="checkbox" name="is_premium" id="is_premium">
         <div class='form-group'>
             <label for="Title">Title*</label>
             <input type="text" name="title" id="title" class="form-control" required>
@@ -40,11 +40,12 @@
             </ul>
         </div>
         <!--  TEMP CATEGORIES  -->
-
+        
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#categoriesModal">
             Category tags
         </button>
         <li>
+            This button is meant to show a scrollable modal box that holds all current existing categories and the option to create new ones. 
             select categories here
         </li>
         <br>

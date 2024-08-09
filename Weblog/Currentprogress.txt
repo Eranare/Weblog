@@ -2,6 +2,7 @@ as of 7-8 the functionality in the controllers is mostly done, edit and delete e
 Things i definately need to do still would include:
 - making a profile page for users, and potentially the blog owner too.
 - Articles storage
+- Actually link the articles and categories together.
 - Article edit
 - currently the admin page is like my webshops dashboard. we can simplify that and the workflow for the user. 
 - reader userprofile page. (subscriptions, edit user info, liked/favorite articles maybe?)

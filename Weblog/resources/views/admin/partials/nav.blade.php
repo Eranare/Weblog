@@ -1,14 +1,12 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ route('dashboard') }}">Admin Panel</a>
+    <a class="navbar-brand" href="{{ route('admin.dashboard') }}">Admin Panel</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="adminNavbar">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link @if(Route::currentRouteName() == 'dashboard') active @endif" href="{{ route('dashboard') }}">Dashboard</a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link @if(Route::currentRouteName() == 'admin.categories.index') active @endif" href="{{ route('admin.categories.index') }}">Categories</a>
             </li>
