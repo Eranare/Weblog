@@ -22,17 +22,17 @@ class LoginController extends Controller
         ]);
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('home');
+            return redirect()->intended('/');
         }
         return back()->withErrors([
-            'email' => "The provided credentials dont match boyo.",
+            'email' => "The provided credentials don't match.",
         ])->onlyInput('email');
     }
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
-        $request->session()->regenerate();
+        $request->session()->regenerateToken();
         return redirect('/');
     }
 }

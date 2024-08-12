@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('title', 'create category')
 
 
@@ -12,7 +12,7 @@
     </div>
     @endif
 
-    <form action="{{route ('categories.store') }}" method="POST">
+    <form action="{{route ('admin.categories.store') }}" method="POST">
         @csrf
 
         <div class='form-group'>

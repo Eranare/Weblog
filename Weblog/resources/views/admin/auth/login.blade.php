@@ -7,4 +7,4 @@
 </form>
 
 
-<a class="nav-link" href="{{ route('home') }}"><button>back to main menu</button></a>
+<a class="nav-link" href="{{ route('/') }}"><button>back to main menu</button></a>
