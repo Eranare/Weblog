@@ -8,7 +8,7 @@ services:
     container_name: laravel_app
     working_dir: /var/www
     volumes:
-      - app_data_weblog:/var/www
+      - .:/var/www
     networks:
       - laravel_network
 
@@ -17,7 +17,7 @@ services:
     container_name: laravel_web
     working_dir: /var/www
     volumes:
-      - app_data_weblog:/var/www
+      - .:/var/www
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
     networks:
       - laravel_network
@@ -41,5 +41,4 @@ networks:
     driver: bridge
 
 volumes:
-  app_data_weblog:
   pgdata_weblog:

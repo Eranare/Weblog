@@ -9,18 +9,47 @@ class CKEditorController extends Controller
 {
     public function upload(Request $request)
     {
-        if($request->hasFile('upload')) {
-            $file = $request->file('upload');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $filePath = $file->storeAs('uploads', $filename, 'public');
+        if ($request->hasFile('upload')) {
+            try {
+                $file = $request->file('upload');
 
-            $CKEditorFuncNum = $request->input('CKEditorFuncNum');
-            $url = asset('storage/' . $filePath);
-            $msg = 'Image uploaded successfully';
-            $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";
+                // Use a temporary directory for initial uploads
+                $tempDirectory = 'temp_images';
+                Storage::disk('public')->makeDirectory($tempDirectory);
 
-            @header('Content-type: text/html; charset=utf-8');
-            echo $response;
+                $filename = time() . '.' . $file->getClientOriginalExtension();
+                $filePath = "{$tempDirectory}/{$filename}";
+
+                // Store the image temporarily
+                Storage::disk('public')->put($filePath, file_get_contents($file));
+
+                $url = asset('storage/' . $filePath);
+                
+                // Return JSON response to CKEditor
+                return response()->json([
+                    'uploaded' => 1,
+                    'fileName' => $filename,
+                    'url' => $url,
+                ]);
+
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                \Log::error('CKEditor file upload error: ' . $e->getMessage());
+
+                return response()->json([
+                    'uploaded' => 0,
+                    'error' => [
+                        'message' => 'Failed to upload file.'
+                    ],
+                ]);
+            }
         }
+
+        return response()->json([
+            'uploaded' => 0,
+            'error' => [
+                'message' => 'No file was uploaded.'
+            ],
+        ]);
     }
 }

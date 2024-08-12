@@ -33,20 +33,61 @@ class ArticleController extends Controller
             'title' => 'required',
             'content' => 'required',
         ]);
-
-        $filename = Str::slug($request->title) . date('m-d-Y_hia') . '.html';
-        Storage::disk('articles')->put($filename, $request->content);
-
+    
+        // Use a consistent directory name for the article
+        $slug = Str::slug($request->title);
+        $directory = "{$slug}_".date('m-d-Y_hia');
+    
+        // Create the directory structure using Storage
+        Storage::disk('articles')->makeDirectory("{$directory}/img");  // <- Here
+    
+        // Log the directory path to debug
+        \Log::info("Article directory: " . $directory);
+    
+        // Move images from the temp directory to the article's image directory
+        $content = $this->moveImagesToArticleDirectory($request->content, $directory);
+    
+        // Save the HTML content in the correct directory
+        $filename = 'content.html';
+        Storage::disk('articles')->put("{$directory}/{$filename}", $content);
+    
+        // Log where the content is being saved
+        \Log::info("Saving content to: " . storage_path("app/articles/{$directory}/{$filename}"));
+    
+        // Save the article information in the database
         $article = new Article();
         $article->title = $request->title;
-        $article->content_file_path = $filename;
+        $article->content_file_path = "{$directory}/{$filename}";
         $article->user_id = auth()->id();
         $article->is_premium = $request->has('is_premium');
         $article->save();
-
+    
         return redirect()->route('admin.articles.create')->with('success', 'Article created successfully');
     }
-
+    
+    private function moveImagesToArticleDirectory($content, $directory)
+    {
+        $document = new \DOMDocument();
+        @$document->loadHTML($content);
+        $images = $document->getElementsByTagName('img');
+    
+        foreach ($images as $img) {
+            $oldSrc = $img->getAttribute('src');
+            $filename = basename($oldSrc);
+            $newSrc = "storage/{$directory}/img/{$filename}";
+    
+            // Log the image movement path
+            \Log::info("Moving image from temp to: " . storage_path("app/public/{$newSrc}"));
+    
+            if (Storage::disk('public')->exists("temp_images/{$filename}")) {
+                // Move the image to the correct img directory within the article's directory
+                Storage::disk('public')->move("temp_images/{$filename}", "{$directory}/img/{$filename}");
+                $content = str_replace($oldSrc, asset($newSrc), $content);
+            }
+        }
+    
+        return $content;
+    }
     public function show($id)
     {
         $article = Article::findOrFail($id);
