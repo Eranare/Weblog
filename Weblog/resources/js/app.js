@@ -1,4 +1,5 @@
-import './bootstrap';
+import 'bootstrap';
+import '../css/app.css';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 ClassicEditor

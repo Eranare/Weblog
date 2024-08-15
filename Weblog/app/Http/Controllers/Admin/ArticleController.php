@@ -32,6 +32,7 @@ class ArticleController extends Controller
         $request->validate([
             'title' => 'required',
             'content' => 'required',
+            'categories' => 'nullable|array', // Allow categories to be optional
         ]);
     
         // Use a consistent directory name for the article
@@ -39,10 +40,7 @@ class ArticleController extends Controller
         $directory = "{$slug}_".date('m-d-Y_hia');
     
         // Create the directory structure using Storage
-        Storage::disk('articles')->makeDirectory("{$directory}/img");  // <- Here
-    
-        // Log the directory path to debug
-        \Log::info("Article directory: " . $directory);
+        Storage::disk('articles')->makeDirectory("{$directory}/img");
     
         // Move images from the temp directory to the article's image directory
         $content = $this->moveImagesToArticleDirectory($request->content, $directory);
@@ -51,9 +49,6 @@ class ArticleController extends Controller
         $filename = 'content.html';
         Storage::disk('articles')->put("{$directory}/{$filename}", $content);
     
-        // Log where the content is being saved
-        \Log::info("Saving content to: " . storage_path("app/articles/{$directory}/{$filename}"));
-    
         // Save the article information in the database
         $article = new Article();
         $article->title = $request->title;
@@ -61,6 +56,14 @@ class ArticleController extends Controller
         $article->user_id = auth()->id();
         $article->is_premium = $request->has('is_premium');
         $article->save();
+    
+        // If no categories are selected, default to "Miscellaneous"
+        if (empty($request->categories)) {
+            $miscCategory = Category::firstOrCreate(['name' => 'Miscellaneous']);
+            $article->categories()->attach($miscCategory->id);
+        } else {
+            $article->categories()->attach($request->categories);
+        }
     
         return redirect()->route('admin.articles.create')->with('success', 'Article created successfully');
     }

@@ -11,6 +11,8 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "@ckeditor/ckeditor5-build-classic": "^43.0.0"
+        "@ckeditor/ckeditor5-build-classic": "^43.0.0",
+        "@popperjs/core": "^2.11.8",
+        "bootstrap": "^5.1.3"
     }
 }

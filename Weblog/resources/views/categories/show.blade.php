@@ -13,7 +13,7 @@
 <ul>
         @foreach($articles as $article)
         <li class="list-group-item">
-            <a href="{{route('articles.show', $article->id) }}"> {{$article->name}}</a>
+            <a href="{{route('articles.show', $article->id) }}"> hi {{$article->name}}</a>
             {{$article->preview}}
            
         </li>

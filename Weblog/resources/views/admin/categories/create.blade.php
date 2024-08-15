@@ -32,7 +32,7 @@
         </div>
 
         <br>
-        <button type="submit">SEND IT</button>
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
 
     </form>
 
