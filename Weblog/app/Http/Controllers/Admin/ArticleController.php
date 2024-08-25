@@ -94,7 +94,9 @@ class ArticleController extends Controller
     public function show($id)
     {
         $article = Article::findOrFail($id);
-        return view('admin.articles.show', compact('article'));
+        $htmlContent = Storage::disk('articles')->get($article->content_file_path);
+        
+        return view('admin.articles.show', compact('article', 'htmlContent'));
     }
 
     public function edit($id)

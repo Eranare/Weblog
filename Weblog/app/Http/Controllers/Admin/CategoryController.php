@@ -39,9 +39,10 @@ class CategoryController extends Controller
     }
 
     public function show($id)
-    {
+    {   
         $category = Category::findOrFail($id);
-        return view('admin.categories.show', compact('category'));
+        $articles = $category->articles; 
+        return view('admin.categories.show', compact('category', 'articles'));
     }
 
     public function edit($id)
