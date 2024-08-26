@@ -9,12 +9,12 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); //NOT NULL
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // The subscriber
+            $table->foreignId('writer_id')->constrained('users')->onDelete('cascade'); // The writer being subscribed to
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('subscriptions');
     }
 };

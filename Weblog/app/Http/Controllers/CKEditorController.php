@@ -24,14 +24,13 @@ class CKEditorController extends Controller
                 Storage::disk('public')->put($filePath, file_get_contents($file));
 
                 $url = asset('storage/' . $filePath);
-                
+
                 // Return JSON response to CKEditor
                 return response()->json([
                     'uploaded' => 1,
                     'fileName' => $filename,
                     'url' => $url,
                 ]);
-
             } catch (\Exception $e) {
                 // Log the error for debugging
                 \Log::error('CKEditor file upload error: ' . $e->getMessage());

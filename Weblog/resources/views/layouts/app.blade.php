@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    @if(auth()->check() && auth()->user()->role == 'admin')
+    @if(auth()->check() && auth()->user()->is_writer == true)
     @include('writer.partials.nav')
     @endif
     @include('partials.nav')

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Writer;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -13,12 +15,14 @@ class ArticleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'admin']);
+        $this->middleware(['auth', 'writer']);
     }
-
     public function index()
     {
-        $articles = Article::all();
+        // Fetch articles that belong to the logged-in user
+        $user = Auth::user();
+        $articles = Article::where('user_id', $user->id)->get();
+
         return view('writer.articles.index', compact('articles'));
     }
 
@@ -33,6 +37,7 @@ class ArticleController extends Controller
         $request->validate([
             'title' => 'required',
             'content' => 'required',
+            'categories' => 'array|exists:categories,id'
         ]);
 
         $filename = Str::slug($request->title) . date('m-d-Y_hia') . '.html';
@@ -45,20 +50,25 @@ class ArticleController extends Controller
         $article->is_premium = $request->has('is_premium');
         $article->save();
 
+        // Attach categories to the article
+        $article->categories()->attach($request->categories);
+
         return redirect()->route('writer.articles.create')->with('success', 'Article created successfully');
     }
 
     public function show($id)
     {
         $article = Article::findOrFail($id);
-        return view('writer.articles.show', compact('article'));
+        $htmlContent = Storage::disk('articles')->get($article->content_file_path);
+        return view('writer.articles.show', compact('article', 'htmlContent'));
     }
 
     public function edit($id)
     {
         $article = Article::findOrFail($id);
         $categories = Category::all();
-        return view('writer.articles.edit', compact('article', 'categories'));
+        $htmlContent = Storage::disk('articles')->get($article->content_file_path);
+        return view('writer.articles.edit', compact('article', 'categories', 'htmlContent'));
     }
 
     public function update(Request $request, $id)
@@ -66,6 +76,7 @@ class ArticleController extends Controller
         $request->validate([
             'title' => 'required',
             'content' => 'required',
+            'categories' => 'array|exists:categories,id' // Validate categories
         ]);
 
         $article = Article::findOrFail($id);
@@ -79,7 +90,7 @@ class ArticleController extends Controller
 
         $article->is_premium = $request->has('is_premium');
         $article->save();
-
+        $article->categories()->sync($request->categories);
         return redirect()->route('writer.articles.index')->with('success', 'Article updated successfully');
     }
 
@@ -87,6 +98,7 @@ class ArticleController extends Controller
     {
         $article = Article::findOrFail($id);
         Storage::disk('articles')->delete($article->content_file_path);
+        $article->categories()->detach();
         $article->delete();
 
         return redirect()->route('writer.articles.index')->with('success', 'Article deleted successfully');

@@ -10,7 +10,7 @@ class CategoryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'admin']);
+        $this->middleware(['auth', 'writer']);
     }
 
     public function index()
@@ -33,6 +33,7 @@ class CategoryController extends Controller
 
         $category = new Category();
         $category->name = $request->name;
+        $category->user_id = auth()->id();
         $category->save();
 
         return redirect()->route('writer.categories.create')->with('success', 'Category created successfully');
@@ -41,7 +42,9 @@ class CategoryController extends Controller
     public function show($id)
     {
         $category = Category::findOrFail($id);
-        return view('writer.categories.show', compact('category'));
+        $articles = $category->articles;
+
+        return view('writer.categories.show', compact('category', 'articles'));
     }
 
     public function edit($id)

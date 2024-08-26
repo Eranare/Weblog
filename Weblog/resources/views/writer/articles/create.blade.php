@@ -1,13 +1,12 @@
-
-
 @extends('layouts.admin')
 @section('title', 'Create Article')
+
 
 @section('content')
 <div class="container">
     <h1>Create a New Article</h1>
-    
-    <form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
+
+    <form action="{{ route('writer.articles.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label for="title">Title</label>
@@ -19,13 +18,15 @@
             <textarea name="content" id="content" class="form-control" rows="10"></textarea>
         </div>
 
+        <!-- Hidden inputs for selected categories -->
+        <div id="hiddenCategoriesContainer"></div>
+
         <!-- Button to Open the Modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoriesModal">
             Category tags
         </button>
-        <p>This button opens a scrollable modal box that shows all current existing categories and the option to create new ones.</p>
-        
-        <!-- Categories selected display -->
+
+        <!-- Selected Categories Display -->
         <div id="selectedCategories" class="mt-3">
             <strong>Selected Categories:</strong>
             <ul id="selectedCategoriesList">
@@ -33,7 +34,9 @@
             </ul>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
     </form>
 </div>
 
@@ -49,7 +52,8 @@
                 <ul>
                     @foreach($categories as $category)
                     <li>
-                        <input type="checkbox" class="category-checkbox" name="categories[]" value="{{ $category->id }}"> {{ $category->name }}
+                        <input type="checkbox" class="category-checkbox" value="{{ $category->id }}">
+                        {{ $category->name }}
                     </li>
                     @endforeach
                 </ul>
@@ -61,29 +65,36 @@
         </div>
     </div>
 </div>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const saveCategoriesBtn = document.getElementById('saveCategoriesBtn');
         const selectedCategoriesList = document.getElementById('selectedCategoriesList');
+        const hiddenCategoriesContainer = document.getElementById('hiddenCategoriesContainer');
         const checkboxes = document.querySelectorAll('.category-checkbox');
 
-        saveCategoriesBtn.addEventListener('click', function () {
-            // Clear the selected categories list
+        saveCategoriesBtn.addEventListener('click', function() {
+            // Clear existing hidden inputs and selected categories display
+            hiddenCategoriesContainer.innerHTML = '';
             selectedCategoriesList.innerHTML = '';
 
-            // Iterate over checkboxes to add selected categories to the list
-            checkboxes.forEach(function (checkbox) {
+            // Iterate over checkboxes and handle selected categories
+            checkboxes.forEach(function(checkbox) {
                 if (checkbox.checked) {
+                    // Create hidden input for form submission
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'categories[]';
+                    hiddenInput.value = checkbox.value;
+                    hiddenCategoriesContainer.appendChild(hiddenInput);
+
+                    // Display selected category on the main page
                     const listItem = document.createElement('li');
                     listItem.textContent = checkbox.nextSibling.textContent.trim();
                     selectedCategoriesList.appendChild(listItem);
                 }
             });
 
-            // Close the modal after saving changes
-            const categoriesModal = new bootstrap.Modal(document.getElementById('categoriesModal'));
-            categoriesModal.hide();
+
         });
     });
 </script>
@@ -94,5 +105,3 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 @vite('resources/js/app.js')
 @endsection
-
-<!--Categories doesnt seem to be send with the little modal box that shows up when clicking submit!-->

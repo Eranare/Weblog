@@ -9,9 +9,9 @@
     <h1>Your Profile</h1>
 
     @if (session('status'))
-        <div class="alert alert-success">
-            {{ session('status') }}
-        </div>
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
     @endif
 
     <form action="{{ route('profile.update') }}" method="POST">
@@ -26,6 +26,10 @@
         <div class="form-group">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" id="is_writer" name="is_writer" class="form-check-input" {{ $user->is_writer ? 'checked' : '' }}>
+            <label for="is_writer" class="form-check-label">Become a Writer</label>
         </div>
 
         <!-- You can add more fields as needed -->

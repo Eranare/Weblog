@@ -32,7 +32,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => 'reader', // Default role for new users
+            'role' => 'user', // Default role for new users
         ]);
     }
 

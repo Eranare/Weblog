@@ -17,10 +17,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'reader', 'writer'])->default('reader');
-            $table->boolean('is_premium')->default(false);
+            $table->enum('role', ['admin', 'user'])->default('user');
+            $table->boolean('is_writer')->default(false);
             $table->boolean('is_banned')->default(false);
-            $table->dateTime('banned_untill');
+            $table->dateTime('banned_untill')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

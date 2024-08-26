@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 use Illuminate\Support\Facades\Auth;
+
 class ArticleController extends Controller
 {
 
@@ -27,7 +28,7 @@ class ArticleController extends Controller
     public function show($id)
     {
         $article = Article::findOrFail($id);
-    
+
         // Check if the article is premium
         if ($article->is_premium) {
             // Check if the user is authenticated
@@ -38,7 +39,7 @@ class ArticleController extends Controller
                     return view('articles.show', compact('article', 'htmlContent'));
                 } else {
                     // Redirect to a page that suggests upgrading to a premium subscription
-                    return redirect()->route('premium.info');
+                    return redirect()->route('home');
                 }
             } else {
                 // If not logged in, redirect to the login page
