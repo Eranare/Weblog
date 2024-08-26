@@ -9,10 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('bio')->nullable(); // Example of profile-specific field
+            $table->string('twitter_handle')->nullable(); // Example of profile-specific field
+            // Add more profile-related fields here
             $table->timestamps();
         });
     }
