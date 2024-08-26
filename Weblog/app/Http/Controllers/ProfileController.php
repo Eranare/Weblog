@@ -30,4 +30,6 @@ class ProfileController extends Controller
 
         return redirect()->route('profile.show')->with('status', 'Profile updated successfully!');
     }
+
+    //Add edits for non authie stuff like bio and such.
 }
