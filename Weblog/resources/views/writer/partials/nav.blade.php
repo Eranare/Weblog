@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ route('admin.dashboard') }}">Admin Panel</a>
+    <a class="navbar-brand" href="{{ route('writer.dashboard') }}">Writer Panel</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -8,10 +8,10 @@
         <ul class="navbar-nav mr-auto">
 
             <li class="nav-item">
-                <a class="nav-link @if(Route::currentRouteName() == 'admin.categories.index') active @endif" href="{{ route('admin.categories.index') }}">Categories</a>
+                <a class="nav-link @if(Route::currentRouteName() == 'writer.categories.index') active @endif" href="{{ route('writer.categories.index') }}">Categories</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @if(Route::currentRouteName() == 'admin.articles.index') active @endif" href="{{ route('admin.articles.index') }}">Articles</a>
+                <a class="nav-link @if(Route::currentRouteName() == 'writer.articles.index') active @endif" href="{{ route('writer.articles.index') }}">Articles</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="adminProfileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -25,12 +25,11 @@
                 </div>
             </li>
             <li class="nav-item">
-                    <a class="nav-link" href="{{ route('logout') }}"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </li>
+                <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+            </li>
         </ul>
     </div>
 </nav>

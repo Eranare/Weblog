@@ -12,7 +12,7 @@
     </div>
     @endif
 
-    <form action="{{route ('admin.categories.store') }}" method="POST">
+    <form action="{{route ('writer.categories.store') }}" method="POST">
         @csrf
 
         <div class='form-group'>

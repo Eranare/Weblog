@@ -7,11 +7,13 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\WriterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PremiumController;
-use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
-use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Writer\ArticleController as WriterArticleController;
+use App\Http\Controllers\Writer\CategoryController as WriterCategoryController;
 use App\Http\Controllers\CKEditorController;
+
 // Public routes
 Route::get('/', function () {
     return view('home');
@@ -26,7 +28,7 @@ Route::get('/premium-articles/{id}', [PremiumController::class, 'show'])->name('
 Route::get('/premium/subscribe', [PremiumController::class, 'subscribe'])->name('premium.subscribe');
 Route::post('/premium/subscribe', [PremiumController::class, 'processSubscription'])->name('premium.processSubscription');
 
-Route::get('/premium/info', function(){
+Route::get('/premium/info', function () {
     return view('premium/info');
 })->name('premium.info');
 
@@ -45,9 +47,8 @@ Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
 // Admin routes with prefix and name
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    Route::resource('articles', AdminArticleController::class);
-    Route::resource('categories', AdminCategoryController::class);
+Route::middleware(['auth', 'admin'])->prefix('writer')->name('writer.')->group(function () {
+    Route::get('/dashboard', [WriterController::class, 'index'])->name('dashboard');
+    Route::resource('articles', WriterArticleController::class);
+    Route::resource('categories', WriterCategoryController::class);
 });
-

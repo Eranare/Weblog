@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('content_file_path'); //Link to content saved in storage?
             $table->foreignId('user_id');
             $table->boolean('is_premium');
+            $table->boolean('is_deleted');
             $table->timestamps();
         });
     }

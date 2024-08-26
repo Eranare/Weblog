@@ -9,13 +9,16 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function showProfile(){
-
+    public function showProfile()
+    {
     }
 
-    public function editProfile(){
+    public function editProfile()
+    {
+    }
 
-        
+    public function becomeWriter()
+    {
     }
 }
 
