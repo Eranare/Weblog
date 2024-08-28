@@ -2,27 +2,45 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\User;
+use App\Models\Follow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class FollowController extends Controller
 {
-    public function follow(User $writer)
+    public function follow(User $author)
     {
-        if (Auth::user()->isFollowing($writer)) {
-            return redirect()->back()->with('error', 'You are already following this writer.');
+        if (!Auth::user()->isFollowing($author->id)) {
+            Follow::create([
+                'user_id' => Auth::id(),
+                'followed_id' => $author->id,
+            ]);
+
+            return redirect()->back()->with('success', 'You are now following ' . $author->name);
         }
 
-        Auth::user()->follows()->attach($writer->id);
-
-        return redirect()->back()->with('success', 'You are now following ' . $writer->name);
+        return redirect()->back()->with('info', 'You are already following ' . $author->name);
     }
 
-    public function unfollow(User $writer)
+    public function unfollow(User $author)
     {
-        Auth::user()->follows()->detach($writer->id);
+        $follow = Auth::user()->follows()->where('followed_id', $author->id)->first();
 
-        return redirect()->back()->with('success', 'You have unfollowed ' . $writer->name);
+        if ($follow) {
+            $follow->delete();
+
+            return redirect()->back()->with('success', 'You have unfollowed ' . $author->name);
+        }
+
+        return redirect()->back()->with('info', 'You are not following ' . $author->name);
+    }
+
+    public function index()
+    {
+        $followedAuthors = Auth::user()->follows()->with('followedUser')->get();
+    
+        return view('follows.index', compact('followedAuthors'));
     }
 }

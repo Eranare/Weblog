@@ -26,7 +26,7 @@ class CategoryController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {   //Check in frontend and here if name is not the same as an existing name.
         $request->validate([
             'name' => 'required',
         ]);

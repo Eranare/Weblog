@@ -14,7 +14,7 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\Writer\ArticleController as WriterArticleController;
 use App\Http\Controllers\Writer\CategoryController as WriterCategoryController;
 use App\Http\Controllers\CKEditorController;
-
+use App\Http\Controllers\CommentController;
 // Public routes
 Route::get('/', function () {
     return view('home');
@@ -25,6 +25,8 @@ Route::get('/categories', [CategoryController::class, 'index'])->name('categorie
 Route::get('/categories/{id}', [CategoryController::class, 'show'])->name('categories.show');
 
 
+Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::get('/api/articles/{article}/comments', [CommentController::class, 'index'])->name('comments.index');
 // Authentication routes
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
@@ -38,6 +40,7 @@ Route::post('ckeditor/upload', [CKEditorController::class, 'upload'])->name('cke
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
+Route::get('/authors/{author}', [ProfileController::class, 'showAuthorProfile'])->name('author.profile');
 // Admin routes with prefix and name
 Route::middleware(['auth', 'writer'])->prefix('writer')->name('writer.')->group(function () {
     Route::get('/dashboard', [WriterController::class, 'index'])->name('dashboard');
@@ -46,8 +49,9 @@ Route::middleware(['auth', 'writer'])->prefix('writer')->name('writer.')->group(
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::post('/follow/{writer}', [FollowController::class, 'follow'])->name('follow');
-    Route::post('/unfollow/{writer}', [FollowController::class, 'unfollow'])->name('unfollow');
+    Route::post('/authors/{author}/follow', [FollowController::class, 'follow'])->name('authors.follow');
+    Route::delete('/authors/{author}/unfollow', [FollowController::class, 'unfollow'])->name('authors.unfollow');
+    Route::get('/follows', [FollowController::class, 'index'])->name('user.follows');
 });
 
 Route::middleware(['auth'])->group(function () {

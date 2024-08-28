@@ -26,7 +26,7 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            Category::firstOrCreate(['name' => $category]);
+            Category::firstOrCreate(['name' => $category, 'user_id' => 1]);
         }
     }
 }

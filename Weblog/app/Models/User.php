@@ -57,43 +57,23 @@ class User extends Authenticatable
         return $this->hasMany(Article::class);
     }
 
-    // Relationship for the writers a user is subscribed to
-    public function subscriptions(): BelongsToMany
+    // Users can follow many writers
+    public function follows()
     {
-        return $this->belongsToMany(User::class, 'subscriptions', 'user_id', 'writer_id')
-            ->withTimestamps();
+        return $this->hasMany(Follow::class, 'user_id');
     }
 
-    // Relationship for the subscribers a writer has
-    public function subscribers(): BelongsToMany
+    // Writers can be followed by many users
+    public function followers()
     {
-        return $this->belongsToMany(User::class, 'subscriptions', 'writer_id', 'user_id')
-            ->withTimestamps();
+        return $this->hasMany(Follow::class, 'followed_id');
     }
 
-    // Check if a user is subscribed to a specific writer
-    public function isSubscribedTo(User $writer): bool
+    // Check if the user is following a writer
+    public function isFollowing($authorId)
     {
-        return $this->subscriptions()->where('writer_id', $writer->id)->exists();
+        return $this->follows()->where('followed_id', $authorId)->exists();
     }
 
-    // Relationship for the writers a user follows
-    public function follows(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'follows', 'user_id', 'writer_id')
-            ->withTimestamps();
-    }
-
-    // Relationship for the followers a writer has
-    public function followers(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'follows', 'writer_id', 'user_id')
-            ->withTimestamps();
-    }
-
-    // Check if a user is following a specific writer
-    public function isFollowing(User $writer): bool
-    {
-        return $this->follows()->where('writer_id', $writer->id)->exists();
-    }
+    //ToDo: Add Subscriptions here later
 }

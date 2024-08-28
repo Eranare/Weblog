@@ -16,7 +16,11 @@
             <li class="nav-item">
                 <a class="nav-link @if(Route::currentRouteName() == 'articles.index') active @endif" href="{{ route('articles.index') }}">Articles</a>
             </li>
-
+            @if(Auth::check())
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('user.follows') }}">Followed Writers</a>
+            </li>
+            @endif
             @guest
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('login') }}">Login</a>
