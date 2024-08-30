@@ -13,7 +13,7 @@
             @foreach($articles as $article)
                 <div class="col-md-6">
                     <div class="card mb-4">
-                        <img src="https://cataas.com/cat?{{ Str::random(10) }}" class="card-img-top" alt="Cat Image">
+                        <img src="https://cataas.com/cat?{{ Str::random(10) }}" class="card-img-top" alt="Article Image">
                         <div class="card-body">
                             <h5 class="card-title">{{ $article->title }}</h5>
                             <p class="card-text">
@@ -26,4 +26,5 @@
             @endforeach
         </div>
     @endif
+    
 @endsection

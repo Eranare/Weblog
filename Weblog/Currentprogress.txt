@@ -1,18 +1,22 @@
-ToDo:
-- Create a writer role. we will have multiple article writers.
-- reader accounts can sign up to become writer. give em a tos or some shit to verify before accepting them as a writer role.
+Prio: -SUBSCRIPTIONS
 
+
+ToDo:
+- cleaner navigation, maybe add a bar under the nav bar which shows the steps of where ones at currently? or something else. 
+- reader accounts can sign up to become writer. EXTRA: give em a tos or some shit to verify before accepting them as a writer role.
+- cards display should use images from the articles, and the cards should all be the same size
+- Cards should hold a preview of the article. and have a small graphic denoting if its premium. and to show if its by a followed/subscribed author?..
 - Users can subscribe to multiple writers, each writer will have their own subscription list. 
-- Currency tracker for writer role? I guess we are tacking on a commission for the website. 5%. and then writers will pay for the payment processor commission themselves. 
-- Writers can track income or some shit from their profile?...
+- EXTRA: Currency tracker for writer role? I guess we are tacking on a commission for the website. 5%. and then writers will pay for the payment processor commission themselves. 
+
 - Seperate and change Admin dashboard to writer Dashboard.
 - Make a proper profile page for writers and readers.
-- Double check if categories and articles are linked properly.
-- Article edit
-- Article flag for deletion.
+
 - Comments.
+
 - Writers should have capability to hide comments on their articles i guess. or just save that for admin. 
-- Report function for articles and comments. track reported comments and articles in admin panel. (allow admin to message writers regarding these things?) 
+- on making a new article the writer should easily be able to create a new category or more on the same page, without resetting the page and potentially losing their article.
+- EXTRA: Report function for articles and comments. track reported comments and articles in admin panel. (allow admin to message writers regarding these things?) 
 - currently the admin page is like my webshops dashboard. we can simplify that and the workflow for the user. 
 - reader userprofile page. (subscriptions, edit user info, liked/favorite articles maybe?), if writer they will have a seperate panel above the standard nav bar. 
 

@@ -8,6 +8,7 @@
 
     <form action="{{ route('writer.articles.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        Premium article: <input type="checkbox" name="is_premium" id="is_premium">
         <div class="form-group">
             <label for="title">Title</label>
             <input type="text" class="form-control" id="title" name="title" required>

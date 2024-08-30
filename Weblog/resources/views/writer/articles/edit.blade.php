@@ -8,7 +8,7 @@
     <form action="{{ route('writer.articles.update', $article->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-
+        Premium article: <input type="checkbox" name="is_premium" id="is_premium" value="1" {{ old('is_premium', $article->is_premium) ? 'checked' : '' }}>
         <div class="form-group">
             <label for="title">Title</label>
             <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $article->title) }}" required>

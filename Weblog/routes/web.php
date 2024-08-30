@@ -2,6 +2,7 @@
 // routes/web.php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
@@ -16,9 +17,12 @@ use App\Http\Controllers\Writer\CategoryController as WriterCategoryController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\CommentController;
 // Public routes
-Route::get('/', function () {
+Route::get('/', [HomeController::class, 'index'])->name('home'); 
+/*
+function () {
+
     return view('home');
-})->name('home');
+})->name('home');*/
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
