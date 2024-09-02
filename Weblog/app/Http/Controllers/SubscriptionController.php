@@ -8,23 +8,44 @@ use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
 {
-    public function subscribe(User $writer)
+    public function showPaymentPage(User $author)
     {
-        if (Auth::user()->isSubscribedTo($writer)) {
-            return redirect()->back()->with('error', 'You are already subscribed to this writer.');
+        // Ensure user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('login');
         }
 
-        Auth::user()->subscriptions()->create([
-            'writer_id' => $writer->id,
-        ]);
+        // Check if the user is already subscribed
+        if (Auth::user()->isSubscribedTo($author->id)) {
+            return redirect()->route('articles.show', $author->id)->with('info', 'You are already subscribed to this author.');
+        }
 
-        return redirect()->back()->with('success', 'You have subscribed to ' . $writer->name);
+        // Show the payment page
+        return view('subscriptions.payment', compact('author'));
     }
 
-    public function unsubscribe(User $writer)
+    public function subscribe(Request $request, User $author)
     {
-        Auth::user()->subscriptions()->where('writer_id', $writer->id)->delete();
+        // Ensure user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
 
-        return redirect()->back()->with('success', 'You have unsubscribed from ' . $writer->name);
+        // Process payment here (integrate with Stripe or another payment gateway)
+        // For now, assume payment is successful
+
+        // Create the subscription record
+        Auth::user()->subscriptions()->create([
+            'author_id' => $author->id,
+        ]);
+
+        $latestArticle = $author->articles()->latest()->first();
+
+        if ($latestArticle) {
+            return redirect()->route('articles.show', $latestArticle->id)->with('success', 'You have successfully subscribed to ' . $author->name);
+        } else {
+            
+            return redirect()->route('home')->with('success', 'You have successfully subscribed to ' . $author->name);
+        }
     }
 }

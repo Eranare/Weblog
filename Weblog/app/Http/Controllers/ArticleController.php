@@ -28,20 +28,19 @@ class ArticleController extends Controller
 
 
     public function show($id)
-{
-    $article = Article::with('user')->findOrFail($id);
-    $author = $article->user;  // Extract the author from the article
-
-    if ($article->is_premium) {
-        if (Auth::check() && Auth::user()->is_premium) {
-            $htmlContent = Storage::disk('articles')->get($article->content_file_path);
-            return view('articles.show', compact('article', 'htmlContent', 'author'));
-        } else {
-            return Auth::check() ? redirect()->route('home') : redirect()->route('login');
-        }
-    } else {
+    {
+        $article = Article::with('user')->findOrFail($id);
+        $author = $article->user;  // Extract the author from the article
+        $isSubscribed = Auth::check() && Auth::user()->isSubscribedTo($author->id);
+    
         $htmlContent = Storage::disk('articles')->get($article->content_file_path);
-        return view('articles.show', compact('article', 'htmlContent', 'author'));
+    
+        if ($article->is_premium && !$isSubscribed) {
+            // Allow only the first 150 words and prompt for subscription
+            return view('articles.show', compact('article', 'htmlContent', 'author', 'isSubscribed'));
+        } else {
+            // Show full content and comments if the article is not premium or the user is subscribed
+            return view('articles.show', compact('article', 'htmlContent', 'author', 'isSubscribed'));
+        }
     }
-}
 }

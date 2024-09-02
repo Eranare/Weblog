@@ -116,20 +116,9 @@
     });
 </script>
 
-<script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
 <script>
-    ClassicEditor
-        .create(document.querySelector('#content'), {
-            // Your CKEditor configuration (like toolbar options)
-            ckfinder: {
-                uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}"
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    const uploadUrl = "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}";
 </script>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 @vite('resources/js/app.js')

@@ -58,7 +58,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/follows', [FollowController::class, 'index'])->name('user.follows');
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::post('/subscribe/{writer}', [SubscriptionController::class, 'subscribe'])->name('subscribe');
-    Route::post('/unsubscribe/{writer}', [SubscriptionController::class, 'unsubscribe'])->name('unsubscribe');
+Route::post('/authors/{author}/subscribe', [SubscriptionController::class, 'subscribe'])->name('authors.subscribe');
+Route::get('/authors/{author}/subscribe', [SubscriptionController::class, 'showPaymentPage'])->name('authors.subscribe.show');
+
+
+Route::get('/test-storage', function () {
+    try {
+        Storage::disk('articles')->put('test.html', '<h1>Test</h1>');
+        return 'File created successfully in ' . Storage::disk('articles')->path('test.html');
+    } catch (\Exception $e) {
+        return 'Failed to create file: ' . $e->getMessage();
+    }
 });

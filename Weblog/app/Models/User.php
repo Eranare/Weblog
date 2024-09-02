@@ -76,4 +76,18 @@ class User extends Authenticatable
     }
 
     //ToDo: Add Subscriptions here later
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'user_id');
+    }
+
+    public function subscribers()
+    {
+        return $this->hasMany(Subscription::class, 'author_id');
+    }
+
+    public function isSubscribedTo($authorId)
+    {
+        return $this->subscriptions()->where('author_id', $authorId)->exists();
+    }
 }

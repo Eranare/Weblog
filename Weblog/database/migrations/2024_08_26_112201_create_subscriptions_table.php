@@ -9,12 +9,12 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // The subscriber
-            $table->foreignId('writer_id')->constrained('users')->onDelete('cascade'); // The writer being subscribed to
+            $table->foreignId('author_id')->constrained('users')->onDelete('cascade'); // The author being subscribed to
             $table->timestamps();
         });
     }

@@ -18,12 +18,25 @@
                     <button type="submit" class="btn btn-primary btn-sm ms-2">Follow</button>
                 </form>
             @endif
+
+            @if($isSubscribed)
+                <span class="badge bg-success ms-2">Subscribed</span>
+            @else
+                <a href="{{ route('authors.subscribe.show', $author->id) }}" class="btn btn-warning btn-sm ms-2">Subscribe</a>
+            @endif
         @endif
     </h4>
 
     <div class="article-content mb-4">
-        {!! $htmlContent !!}
+        @if($article->is_premium && !$isSubscribed)
+            {!! Str::words(strip_tags($htmlContent), 150, '...') !!}
+            <div class="paywall">
+                <p>To read the full article, please subscribe to this author.</p>
+                <a href="{{ route('authors.subscribe.show', $author->id) }}" class="btn btn-warning">Subscribe Now</a>
+            </div>
+        @else
+            {!! $htmlContent !!}
+            @include('comments.show')
+        @endif
     </div>
-
-    @include('comments.show')
 @endsection

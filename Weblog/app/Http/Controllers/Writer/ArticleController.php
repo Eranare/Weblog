@@ -39,23 +39,30 @@ class ArticleController extends Controller
             'content' => 'required',
             'categories' => 'array|exists:categories,id'
         ]);
-
+    
         $filename = Str::slug($request->title) . date('m-d-Y_hia') . '.html';
-        Storage::disk('articles')->put($filename, $request->content);
-
+    
+        try {
+            Storage::disk('articles')->put($filename, $request->content);
+            \Log::info('Article content saved successfully', ['filename' => $filename]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to save article content', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Failed to save article content.');
+        }
+    
         $article = new Article();
         $article->title = $request->title;
         $article->content_file_path = $filename;
         $article->user_id = auth()->id();
         $article->is_premium = $request->has('is_premium');
         $article->save();
-
+    
         // Attach categories to the article
         $article->categories()->attach($request->categories);
-
+    
         return redirect()->route('writer.articles.create')->with('success', 'Article created successfully');
     }
-
+    
     public function show($id)
     {
         $article = Article::findOrFail($id);
@@ -78,19 +85,25 @@ class ArticleController extends Controller
             'content' => 'required',
             'categories' => 'array|exists:categories,id' // Validate categories
         ]);
-
+    
         $article = Article::findOrFail($id);
         $article->title = $request->title;
-
-        if ($request->has('content')) {
-            $filename = Str::slug($request->title) . date('m-d-Y_hia') . '.html';
-            Storage::disk('articles')->put($filename, $request->content);
-            $article->content_file_path = $filename;
-        }
-
+    
+        // Generate a new filename based on the updated title
+        $filename = Str::slug($request->title) . date('m-d-Y_hia') . '.html';
+    
+        // Save the content to a file, even if it hasn't been changed
+        Storage::disk('articles')->put($filename, $request->content);
+    
+        // Update the article's content file path with the new filename
+        $article->content_file_path = $filename;
+    
         $article->is_premium = $request->has('is_premium');
         $article->save();
+    
+        // Sync the selected categories
         $article->categories()->sync($request->categories);
+    
         return redirect()->route('writer.articles.index')->with('success', 'Article updated successfully');
     }
 
