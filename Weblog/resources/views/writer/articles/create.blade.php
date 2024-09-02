@@ -34,6 +34,10 @@
                 <!-- Selected categories will be listed here dynamically -->
             </ul>
         </div>
+        <div class="form-group">
+            <label for="banner_image">Banner Image</label>
+            <input type="file" class="form-control" id="banner_image" name="banner_image">
+        </div>
 
         <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">Submit</button>

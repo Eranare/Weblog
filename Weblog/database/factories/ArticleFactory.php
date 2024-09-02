@@ -20,7 +20,9 @@ class ArticleFactory extends Factory
 
         return [
             'title' => $this->faker->sentence,
-            'content_file_path' => '', 
+            'content_file_path' => '',
+            'banner_image_path' => '',
+            'content_preview' => '',
             'user_id' => $writer ? $writer->id : User::factory(),
         ];
     }
@@ -28,8 +30,17 @@ class ArticleFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (Article $article) {
-            // Generate random content
+            // Generate a unique directory for this article
+            $articleDir = 'faker/' . Str::slug($article->title) . '-' . Str::random(6);
+
+            // Create random content
             $content = "<h1>{$article->title}</h1><p>" . implode("</p><p>", $this->faker->paragraphs(5)) . "</p>";
+
+            // Strip HTML tags to get plain text content for preview
+            $plainTextContent = strip_tags($content);
+
+            // Get the first 100-150 characters for preview
+            $contentPreview = Str::limit($plainTextContent, 150);
 
             // Decide where to place the image(s)
             $imagePlacement = $this->faker->randomElement(['top', 'bottom', 'both', 'none']);
@@ -51,15 +62,20 @@ class ArticleFactory extends Factory
                     break;
             }
 
-            // Create the filename
-            $filename = Str::slug($article->title) . date('m-d-Y_hia') . '.html';
+            // Create the content filename
+            $filename = $articleDir . '/' . Str::slug($article->title) . date('m-d-Y_hia') . '.html';
 
-            // Store the file using the 'articles' disk
+            // Store the content file using the 'articles' disk
             Storage::disk('articles')->put($filename, $content);
 
-            // Update the content_file_path with the correct filename
+            // Generate a random banner image URL
+            $bannerImageUrl = 'https://cataas.com/cat?' . Str::random(10);
+
+            // Update the article with the correct paths
             $article->update([
                 'content_file_path' => $filename,
+                'banner_image_path' => $bannerImageUrl,
+                'content_preview' => $contentPreview,
             ]);
 
             // Attach random categories if any exist

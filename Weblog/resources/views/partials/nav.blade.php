@@ -13,12 +13,17 @@
             <li class="nav-item">
                 <a class="nav-link @if(Route::currentRouteName() == 'categories.index') active @endif" href="{{ route('categories.index') }}">Categories</a>
             </li>
+            <!--
             <li class="nav-item">
                 <a class="nav-link @if(Route::currentRouteName() == 'articles.index') active @endif" href="{{ route('articles.index') }}">Articles</a>
-            </li>
+            </li> -->
             @if(Auth::check())
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('user.follows') }}">Followed Writers</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('user.subscribed') }}">Subbed Writers</a>
             </li>
             @endif
             @guest

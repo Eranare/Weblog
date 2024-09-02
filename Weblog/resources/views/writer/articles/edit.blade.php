@@ -8,7 +8,12 @@
     <form action="{{ route('writer.articles.update', $article->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        Premium article: <input type="checkbox" name="is_premium" id="is_premium" value="1" {{ old('is_premium', $article->is_premium) ? 'checked' : '' }}>
+
+        <div class="form-group">
+            <label for="is_premium">Premium article:</label>
+            <input type="checkbox" name="is_premium" id="is_premium" value="1" {{ old('is_premium', $article->is_premium) ? 'checked' : '' }}>
+        </div>
+
         <div class="form-group">
             <label for="title">Title</label>
             <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $article->title) }}" required>
@@ -35,7 +40,18 @@
             </ul>
         </div>
 
+        <div class="form-group mt-3">
+            <label for="is_hidden">Hide Article:</label>
+            <input type="checkbox" name="is_hidden" id="is_hidden" value="1" {{ $article->is_flagged_for_deletion ? 'checked' : '' }} onchange="toggleDeleteButton(this)">
+        </div>
+
         <button type="submit" class="btn btn-primary mt-3">Update Article</button>
+    </form>
+
+    <form action="{{ route('writer.articles.destroy', $article->id) }}" method="POST" class="mt-3">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger" id="delete-button" {{ $article->is_flagged_for_deletion ? '' : 'disabled' }}>Delete Article</button>
     </form>
 </div>
 
@@ -114,6 +130,11 @@
             // Do not close the modal here; let the user close it manually
         });
     });
+
+    function toggleDeleteButton(checkbox) {
+        const deleteButton = document.getElementById('delete-button');
+        deleteButton.disabled = !checkbox.checked;
+    }
 </script>
 
 <script>

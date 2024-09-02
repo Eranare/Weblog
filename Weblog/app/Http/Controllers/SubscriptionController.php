@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
 {
+
+    public function index()
+    {
+        $subscribedAuthors = Auth::user()->subscriptions()->with('subscribedAuthor')->get();
+
+        return view('subscriptions.index', compact('subscribedAuthors'));
+    }
+
     public function showPaymentPage(User $author)
     {
         // Ensure user is logged in
@@ -31,10 +39,9 @@ class SubscriptionController extends Controller
             return redirect()->route('login');
         }
 
-        // Process payment here (integrate with Stripe or another payment gateway)
-        // For now, assume payment is successful
+        //Stripe or something here
 
-        // Create the subscription record
+
         Auth::user()->subscriptions()->create([
             'author_id' => $author->id,
         ]);
@@ -44,7 +51,7 @@ class SubscriptionController extends Controller
         if ($latestArticle) {
             return redirect()->route('articles.show', $latestArticle->id)->with('success', 'You have successfully subscribed to ' . $author->name);
         } else {
-            
+
             return redirect()->route('home')->with('success', 'You have successfully subscribed to ' . $author->name);
         }
     }

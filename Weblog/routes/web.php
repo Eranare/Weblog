@@ -17,7 +17,7 @@ use App\Http\Controllers\Writer\CategoryController as WriterCategoryController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\CommentController;
 // Public routes
-Route::get('/', [HomeController::class, 'index'])->name('home'); 
+Route::get('/', [HomeController::class, 'index'])->name('home');
 /*
 function () {
 
@@ -50,6 +50,9 @@ Route::middleware(['auth', 'writer'])->prefix('writer')->name('writer.')->group(
     Route::get('/dashboard', [WriterController::class, 'index'])->name('dashboard');
     Route::resource('articles', WriterArticleController::class);
     Route::resource('categories', WriterCategoryController::class);
+
+    Route::put('articles/{id}/hide', [WriterArticleController::class, 'hide'])->name('articles.hide');
+    Route::put('articles/{id}/unhide', [WriterArticleController::class, 'unhide'])->name('articles.unhide');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -59,9 +62,14 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::post('/authors/{author}/subscribe', [SubscriptionController::class, 'subscribe'])->name('authors.subscribe');
-Route::get('/authors/{author}/subscribe', [SubscriptionController::class, 'showPaymentPage'])->name('authors.subscribe.show');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/subs', [SubscriptionController::class, 'index'])->name('user.subscribed');
 
+    Route::get('/authors/{author}/subscribe', [SubscriptionController::class, 'showPaymentPage'])->name('authors.subscribe.show');
+});
+
+/*
 Route::get('/test-storage', function () {
     try {
         Storage::disk('articles')->put('test.html', '<h1>Test</h1>');
@@ -69,4 +77,4 @@ Route::get('/test-storage', function () {
     } catch (\Exception $e) {
         return 'Failed to create file: ' . $e->getMessage();
     }
-});
+}); */

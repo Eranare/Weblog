@@ -20,10 +20,11 @@ class CKEditorController extends Controller
                 $filename = time() . '.' . $file->getClientOriginalExtension();
                 $filePath = "{$tempDirectory}/{$filename}";
 
-                // Store the image temporarily
+                // Store the image temporarily in the public disk
                 Storage::disk('public')->put($filePath, file_get_contents($file));
 
-                $url = asset('storage/' . $filePath);
+                // Generate the correct URL for accessing the image
+                $url = Storage::url($filePath);
 
                 // Return JSON response to CKEditor
                 return response()->json([
@@ -32,7 +33,7 @@ class CKEditorController extends Controller
                     'url' => $url,
                 ]);
             } catch (\Exception $e) {
-                // Log the error for debugging
+                // Log error
                 \Log::error('CKEditor file upload error: ' . $e->getMessage());
 
                 return response()->json([
