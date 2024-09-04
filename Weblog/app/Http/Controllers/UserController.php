@@ -22,8 +22,4 @@ class UserController extends Controller
     }
 }
 
-
-//Show User profile  name.
-//Show user profile info on edit page and allow editing.
-//update function.
-//Show UserPremium status. 
+//We dont quite use this one huh.

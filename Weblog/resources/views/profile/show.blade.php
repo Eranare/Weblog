@@ -27,16 +27,16 @@
             <label for="email">Email</label>
             <input type="email" id="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
         </div>
-        <div class="form-group form-check">
-            <input type="checkbox" id="is_writer" name="is_writer" class="form-check-input" {{ $user->is_writer ? 'checked' : '' }}>
-            <label for="is_writer" class="form-check-label">Become a Writer</label>
-        </div>
-
-
 
         <button type="submit" class="btn btn-outline-primary mt-3">Update Profile</button>
     </form>
+
+    <!-- Show "Start Earning" button only if the user is not a writer -->
+    @if(!$user->is_writer)
     <br>
-    <button class="btn btn-info btn-lg mt-3 ">Start Earning<br>Become a Creator <a href=""></a></button>
+    <a href="{{ route('profile.becomeWriter') }}" class="btn btn-info btn-lg mt-3">
+        Start Earning<br>Become a Creator
+    </a>
+    @endif
 </div>
 @endsection

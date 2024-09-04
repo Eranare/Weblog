@@ -1,4 +1,6 @@
 <?php
+// app/Http/Controllers/ProfileController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -23,11 +25,28 @@ class ProfileController extends Controller
 
         $user->name = $request->input('name');
         $user->email = $request->input('email');
-        $user->is_writer = $request->has('is_writer');
         $user->save();
 
         return redirect()->route('profile.show')->with('status', 'Profile updated successfully!');
     }
+
+    // Show the Become a Writer page
+    public function showBecomeWriterPage()
+    {
+        return view('profile.becomeWriter');
+    }
+
+    // Confirm that the user becomes a writer
+    public function confirmBecomeWriter(Request $request)
+    {
+        $user = Auth::user();
+        $user->is_writer = true;  // Set the user as a writer
+        $user->save();
+
+        return redirect()->route('profile.show')->with('status', 'You are now a writer!');
+    }
+
+
 
     public function showAuthorProfile(User $author)
     {

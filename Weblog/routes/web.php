@@ -44,6 +44,8 @@ Route::post('ckeditor/upload', [CKEditorController::class, 'upload'])->name('cke
 // Profile routes
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::get('/profile/become-writer', [ProfileController::class, 'showBecomeWriterPage'])->name('profile.becomeWriter');
+Route::post('/profile/confirm-become-writer', [ProfileController::class, 'confirmBecomeWriter'])->name('profile.confirmBecomeWriter');
 
 Route::get('/authors/{author}', [ProfileController::class, 'showAuthorProfile'])->name('author.profile');
 // Admin routes with prefix and name
