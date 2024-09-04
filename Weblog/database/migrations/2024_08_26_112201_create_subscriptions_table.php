@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // The subscriber
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // The user who is subscribing
             $table->foreignId('author_id')->constrained('users')->onDelete('cascade'); // The author being subscribed to
-            $table->timestamps();
+            $table->enum('subscription_type', ['monthly', 'yearly'])->default('monthly'); // Monthly or yearly subscription
+            $table->date('start_date');  // Start date of the subscription
+            $table->date('end_date');    // End date of the subscription
+            $table->boolean('active')->default(true); // Whether the subscription is currently active
+            $table->timestamps(); // Timestamps for created_at and updated_at
         });
     }
 

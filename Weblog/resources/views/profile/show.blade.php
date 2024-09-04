@@ -30,7 +30,6 @@
         <div class="form-group form-check">
             <input type="checkbox" id="is_writer" name="is_writer" class="form-check-input" {{ $user->is_writer ? 'checked' : '' }}>
             <label for="is_writer" class="form-check-label">Become a Writer</label>
-
         </div>
 
 
@@ -38,6 +37,6 @@
         <button type="submit" class="btn btn-outline-primary mt-3">Update Profile</button>
     </form>
     <br>
-    <button class="btn btn-info btn-lg mt-3 ">Start Earning<br>Become a Writer <a href=""></a></button>
+    <button class="btn btn-info btn-lg mt-3 ">Start Earning<br>Become a Creator <a href=""></a></button>
 </div>
 @endsection

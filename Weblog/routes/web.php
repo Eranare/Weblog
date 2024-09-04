@@ -25,9 +25,10 @@ function () {
 })->name('home');*/
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
-Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+/*Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');*/
 Route::get('/categories/{id}', [CategoryController::class, 'show'])->name('categories.show');
-
+Route::get('/api/categories/popular', [CategoryController::class, 'getPopularCategories']);
+Route::get('/api/categories/search', [CategoryController::class, 'searchCategories']);
 
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::get('/api/articles/{article}/comments', [CommentController::class, 'index'])->name('comments.index');
@@ -68,6 +69,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/authors/{author}/subscribe', [SubscriptionController::class, 'showPaymentPage'])->name('authors.subscribe.show');
 });
+Route::delete('/authors/unsubscribe/{author}', [SubscriptionController::class, 'unsubscribe'])->name('authors.unsubscribe');
 
 /*
 Route::get('/test-storage', function () {

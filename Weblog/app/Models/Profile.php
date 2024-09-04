@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 class Profile extends Model
 {
     use HasFactory;
-    public function users()
+
+    protected $fillable = ['bio', 'twitter_handle'];
+
+    // Relationship with User
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

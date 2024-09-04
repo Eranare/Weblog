@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,12 +29,16 @@ class ProfileController extends Controller
         return redirect()->route('profile.show')->with('status', 'Profile updated successfully!');
     }
 
-    // New method to show the author's profile
     public function showAuthorProfile(User $author)
     {
-        // Retrieve all articles written by this author
-        $articles = Article::where('user_id', $author->id)->get();
-
-        return view('authors.show', compact('author', 'articles'));
+        // Check if the authenticated user is subscribed to the author
+        $isSubscribed = Auth::check() && Auth::user()->isSubscribedTo($author->id);
+    
+        // Use paginate() to get paginated articles by the author, excluding flagged ones
+        $articles = $author->articles()->where('is_flagged_for_deletion', false)->paginate(10);
+    
+        // Pass $isSubscribed to the view
+        return view('authors.show', compact('author', 'articles', 'isSubscribed'));
     }
+    
 }

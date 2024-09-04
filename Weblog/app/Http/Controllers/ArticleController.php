@@ -12,11 +12,12 @@ class ArticleController extends Controller
     public function index()
     {
         // Fetch all articles ordered by creation date (newest to oldest), excluding hidden articles, with pagination
-        $paginatedArticles = Article::where('is_flagged_for_deletion', false)
+        $paginatedArticles = Article::with('categories')  // Eager load categories
+            ->where('is_flagged_for_deletion', false)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        // Return the view with paginated articles
+        // Return the home view with paginated articles
         return view('home', compact('paginatedArticles'));
     }
 

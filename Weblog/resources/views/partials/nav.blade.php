@@ -10,9 +10,24 @@
             <li class="nav-item">
                 <a class="nav-link @if(Route::currentRouteName() == 'home') active @endif" href="{{ route('home') }}">Home</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link @if(Route::currentRouteName() == 'categories.index') active @endif" href="{{ route('categories.index') }}">Categories</a>
+            <!-- Categories Dropdown in the Navbar -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarCategoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Categories
+                </a>
+                <div class="dropdown-menu p-3" aria-labelledby="navbarCategoriesDropdown" style="min-width: 300px;">
+                    <!-- Search Input -->
+                    <input type="text" id="categorySearch" class="form-control mb-3" placeholder="Search Categories">
+                    
+                    <!-- Default popular categories (top 6) -->
+                    <div id="categoryResults">
+                        <ul id="popularCategories" class="list-unstyled">
+                            <!-- We'll dynamically add the top 6 categories here -->
+                        </ul>
+                    </div>
+                </div>
             </li>
+
             <!--
             <li class="nav-item">
                 <a class="nav-link @if(Route::currentRouteName() == 'articles.index') active @endif" href="{{ route('articles.index') }}">Articles</a>
@@ -55,3 +70,51 @@
         </ul>
     </div>
 </nav>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySearch = document.getElementById('categorySearch');
+    const popularCategories = document.getElementById('popularCategories');
+
+    // Function to fetch top 6 popular categories when the page loads
+    fetch('/api/categories/popular')
+        .then(response => response.json())
+        .then(categories => {
+            popularCategories.innerHTML = ''; // Clear previous content
+            categories.forEach(category => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<a href="/categories/${category.id}" class="dropdown-item">${category.name}</a>`;
+                popularCategories.appendChild(listItem);
+            });
+        })
+        .catch(error => console.error('Error fetching popular categories:', error));
+
+    // Search Categories as user types
+    categorySearch.addEventListener('input', function() {
+        const query = this.value;
+
+        // If search input is empty, show popular categories again
+        if (!query) {
+            popularCategories.style.display = 'block';
+            return;
+        }
+
+        fetch(`/api/categories/search?query=${query}`)
+            .then(response => response.json())
+            .then(categories => {
+                popularCategories.innerHTML = ''; // Clear previous results
+                if (categories.length === 0) {
+                    popularCategories.innerHTML = '<li class="dropdown-item">No categories found</li>';
+                } else {
+                    categories.forEach(category => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `<a href="/categories/${category.id}" class="dropdown-item">${category.name}</a>`;
+                        popularCategories.appendChild(listItem);
+                    });
+                }
+            })
+            .catch(error => console.error('Error searching categories:', error));
+    });
+});
+</script>

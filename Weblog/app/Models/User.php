@@ -46,7 +46,18 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function profile(): HasOne
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            // Ensure profile is created only if not already exists
+            if (!$user->profile) {
+                $user->profile()->create();
+            }
+        });
+    }
+
+    // Relationship with Profile
+    public function profile()
     {
         return $this->hasOne(Profile::class);
     }
@@ -75,7 +86,7 @@ class User extends Authenticatable
         return $this->follows()->where('followed_id', $authorId)->exists();
     }
 
-    //ToDo: Add Subscriptions here later
+    //ToDo: Subs
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class, 'user_id');

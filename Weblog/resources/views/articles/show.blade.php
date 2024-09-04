@@ -22,7 +22,12 @@
     @if($isSubscribed)
     <span class="badge bg-success ms-2">Subscribed</span>
     @else
-    <a href="{{ route('authors.subscribe.show', $author->id) }}" class="btn btn-warning btn-sm ms-2">Subscribe</a>
+    <form action="{{ route('authors.subscribe.show', $author->id) }}" method="GET" class="d-inline">
+        @csrf
+        <!-- Add the redirect URL -->
+        <input type="hidden" name="redirect_url" value="{{ url()->current() }}">
+        <button type="submit" class="btn btn-warning btn-sm ms-2">Subscribe</button>
+    </form>
     @endif
     @endif
 </h4>

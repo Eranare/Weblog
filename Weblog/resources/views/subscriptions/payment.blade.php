@@ -3,24 +3,29 @@
 @section('title', 'Subscribe to ' . $author->name)
 
 @section('content')
-<div class="container">
-    <h2>Subscribe to {{ $author->name }}</h2>
-    <p>To access premium content from this author, please complete the subscription process.</p>
+<h2>Subscribe to {{ $author->name }}</h2>
 
-    <!-- Display subscription options -->
-    <form action="{{ route('authors.subscribe', $author->id) }}" method="POST">
-        @csrf
+<p>Select your subscription plan:</p>
 
-        <!-- You can add more details about the subscription, like duration, price, etc. -->
-        <div class="mb-3">
-            <label for="subscriptionPlan" class="form-label">Choose a Plan</label>
-            <select class="form-select" id="subscriptionPlan" name="plan" required>
-                <option value="monthly">Monthly - $5.00</option>
-                <option value="yearly">Yearly - $50.00</option>
-            </select>
-        </div>
+<form action="{{ route('authors.subscribe', $author->id) }}" method="POST">
+    @csrf
+    <!-- Send back the redirect URL -->
+    <input type="hidden" name="redirect_url" value="{{ request('redirect_url') }}">
+    
+    <div class="form-group">
+        <label>
+            <input type="radio" name="plan" value="monthly" checked>
+            Monthly Subscription ($10/month)
+        </label>
+    </div>
 
-        <button type="submit" class="btn btn-primary">Subscribe and Pay</button>
-    </form>
-</div>
+    <div class="form-group">
+        <label>
+            <input type="radio" name="plan" value="yearly">
+            Yearly Subscription ($100/year)
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Confirm Subscription</button>
+</form>
 @endsection

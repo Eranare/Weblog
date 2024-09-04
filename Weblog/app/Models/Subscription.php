@@ -12,15 +12,20 @@ class Subscription extends Model
     protected $fillable = [
         'user_id',
         'author_id',
+        'subscription_type', // monthly or yearly
+        'start_date',
+        'end_date',
+        'active', // true if the subscription is currently active
     ];
 
-    public function subscribedAuthor()
+    // Subscription relationships
+    public function user()
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class);
     }
 
-    public function subscriber()
+    public function author()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'author_id');
     }
 }
