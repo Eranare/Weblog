@@ -39,31 +39,34 @@ class ArticleController extends Controller
             'categories' => 'array|exists:categories,id',
             'banner_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048' // Validation for image
         ]);
-
+    
         // Create a unique directory for the article
         $articleDir = Str::slug($request->title) . '-' . Str::random(6);
         $filename = $articleDir . '/' . Str::slug($request->title) . date('m-d-Y_hia') . '.html';
-
+    
         // Update image paths in the content
         $content = $this->updateImagePathsInContent($request->content, $articleDir);
-
+    
         // Store the content file
         Storage::disk('articles')->put($filename, $content);
-
+    
         $bannerImagePath = null;
-
+    
         // Handle banner image
         if ($request->hasFile('banner_image')) {
-            // Store the banner image in the article's img directory
-            $bannerImagePath = $request->file('banner_image')->store($articleDir . '/img', 'articles');
+            // Store the banner image in the public directory and get the public URL
+            $bannerImagePath = $request->file('banner_image')->store('banners', 'public');
+    
+            // Use Storage::url() to generate the publicly accessible path
+            $bannerImagePath = Storage::url($bannerImagePath); 
         } else {
             // Extract the first image from the content if no banner image is uploaded
             $bannerImagePath = $this->extractFirstImageFromContent($content, $articleDir);
         }
-
+    
         // Generate content preview
         $contentPreview = $this->generateContentPreview($content);
-
+    
         $article = new Article();
         $article->title = $request->title;
         $article->content_file_path = $filename;
@@ -72,13 +75,12 @@ class ArticleController extends Controller
         $article->user_id = auth()->id();
         $article->is_premium = $request->has('is_premium');
         $article->save();
-
+    
         $article->categories()->attach($request->categories);
-
+    
         return redirect()->route('writer.articles.create')->with('success', 'Article created successfully');
     }
 
-    // Same update logic in the update method
     public function show($id)
     {
         $article = Article::findOrFail($id);
@@ -102,37 +104,43 @@ class ArticleController extends Controller
             'categories' => 'array|exists:categories,id',
             'banner_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048' // Validation for image
         ]);
-
+    
         $article = Article::findOrFail($id);
-
+    
         // Create a unique directory for the article if it doesn't exist
         $articleDir = Str::slug($request->title) . '-' . Str::random(6);
         $filename = $articleDir . '/' . Str::slug($request->title) . date('m-d-Y_hia') . '.html';
-
+    
         // Store the content file
-        Storage::disk('articles')->put($filename, $request->content);
+        $content = $this->updateImagePathsInContent($request->content, $articleDir);
+        Storage::disk('articles')->put($filename, $content);
         $article->content_file_path = $filename;
-
+    
         // Handle banner image
         if ($request->hasFile('banner_image')) {
-            // Store the banner image in the article's img directory
-            $bannerImagePath = $request->file('banner_image')->store($articleDir . '/img', 'public');
+            // Store the banner image in the public directory
+            $bannerImagePath = $request->file('banner_image')->store('banners', 'public');
+    
+            // Use Storage::url() to generate the publicly accessible path
+            $bannerImagePath = Storage::url($bannerImagePath); // Will result in /storage/banners/filename.jpg
         } else {
-            $bannerImagePath = $this->extractFirstImageFromContent($request->content, $articleDir);
+            // Extract the first image from the content if no banner image is uploaded
+            $bannerImagePath = $this->extractFirstImageFromContent($content, $articleDir);
         }
-
+    
         $article->banner_image_path = $bannerImagePath;
-
+    
         // Generate content preview
         $contentPreview = $this->generateContentPreview($request->content);
         $article->content_preview = $contentPreview;
-
+    
         $article->is_premium = $request->has('is_premium');
         $article->save();
         $article->categories()->sync($request->categories);
-
+    
         return redirect()->route('writer.articles.index')->with('success', 'Article updated successfully');
     }
+    
 
     public function hide($id)
     {
@@ -182,15 +190,13 @@ class ArticleController extends Controller
                 $firstImageSrc = asset($firstImageSrc);
             }
 
-            // Now fetch the content from the image path
+            // Fetch the image content and save it to the public storage
             $imageContent = file_get_contents($firstImageSrc);
             $imageName = basename($firstImageSrc);
-            $imagePath = $articleDir . '/img/' . $imageName;
+            $imagePath = 'banners/' . $imageName;
 
-            // Store the image in the article's directory
             Storage::disk('public')->put($imagePath, $imageContent);
 
-            // Return the URL for the stored image
             return Storage::disk('public')->url($imagePath);
         }
 

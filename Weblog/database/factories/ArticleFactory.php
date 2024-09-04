@@ -24,6 +24,7 @@ class ArticleFactory extends Factory
             'banner_image_path' => '',
             'content_preview' => '',
             'user_id' => $writer ? $writer->id : User::factory(),
+            'is_premium' => fake()->boolean(),
         ];
     }
 

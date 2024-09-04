@@ -1,31 +1,24 @@
 <?php
 
-// app/Http/Controllers/ArticleController.php
-
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\Category;
-use App\Models\User;
-use App\Models\Comment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-
-
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
-
-
     public function index()
     {
-        $articles = Article::all();
-        return view('articles.index', compact('articles'));
+        // Fetch all articles ordered by creation date (newest to oldest), excluding hidden articles, with pagination
+        $paginatedArticles = Article::where('is_flagged_for_deletion', false)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        // Return the view with paginated articles
+        return view('home', compact('paginatedArticles'));
     }
-
-
 
     public function show($id)
     {
