@@ -8,7 +8,7 @@
     <title>Admin Panel - @yield('title')</title>
     @vite(['resources/js/app.js', 'resources/css/app.css'])
     <style>
-        /* Custom styles for admin panel */
+        /* Custom styles for admin/writer panel */
         .navbar-dark .navbar-brand {
             color: #fff;
         }
@@ -30,7 +30,7 @@
         @yield('content')
     </div>
 
-    <!-- jQuery and Bootstrap JS -->
+
 
 
 

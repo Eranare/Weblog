@@ -1,12 +1,12 @@
 @if(Auth::check())
-    <form id="comment-form" action="{{ route('comments.store') }}" method="POST">
-        @csrf
-        <input type="hidden" name="article_id" value="{{ $article->id }}">
-        <div class="mb-3">
-            <textarea name="content" class="form-control" rows="3" placeholder="Write a comment..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Post Comment</button>
-    </form>
+<form id="comment-form" action="{{ route('comments.store') }}" method="POST">
+    @csrf
+    <input type="hidden" name="article_id" value="{{ $article->id }}">
+    <div class="mb-3">
+        <textarea name="content" class="form-control" rows="3" placeholder="Write a comment..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Post Comment</button>
+</form>
 @endif
 
 <h2>Comments</h2>
@@ -16,7 +16,11 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        fetchComments({{ $article->id }});
+        fetchComments({
+            {
+                $article - > id
+            }
+        });
     });
 
     function fetchComments(articleId) {
@@ -38,10 +42,10 @@
         comments.forEach(comment => {
             if (!comment.user || !comment.user.name) {
                 console.error('Comment user data is missing:', comment);
-                return; // Skip this comment
+                return; //Shit broke again
             }
 
-            // Create the comment card
+
             const commentCard = document.createElement('div');
             commentCard.classList.add('card', 'mb-3', 'nested-comment');
 
@@ -52,7 +56,11 @@
             commentHeader.classList.add('card-subtitle', 'mb-2', 'text-muted');
 
             let authorLabel = '';
-            if (comment.user_id === {{ $article->user->id }}) {
+            if (comment.user_id === {
+                    {
+                        $article - > user - > id
+                    }
+                }) {
                 authorLabel = `<span class="badge bg-primary ms-2">Author</span>`;
             }
 
@@ -65,17 +73,21 @@
             commentCardBody.appendChild(commentHeader);
             commentCardBody.appendChild(commentContent);
 
-            // Add reply button
-            if ({{ Auth::check() ? 'true' : 'false' }}) {
+
+            if ({
+                    {
+                        Auth::check() ? 'true' : 'false'
+                    }
+                }) {
                 const replyButton = document.createElement('button');
                 replyButton.classList.add('btn', 'btn-sm', 'btn-link');
                 replyButton.innerText = 'Reply';
-                replyButton.onclick = function () {
+                replyButton.onclick = function() {
                     toggleReplyForm(comment.id);
                 };
                 commentCardBody.appendChild(replyButton);
 
-                // Reply form
+
                 const replyForm = document.createElement('form');
                 replyForm.id = `reply-form-${comment.id}`;
                 replyForm.style.display = 'none';
@@ -104,10 +116,10 @@
 
                 const repliesDiv = document.createElement('div');
                 repliesDiv.id = `replies-${comment.id}`;
-                repliesDiv.style.display = 'none'; // Hidden by default
+                repliesDiv.style.display = 'none';
                 repliesDiv.classList.add('mt-3', 'ms-3');
 
-                displayReplies(comment.replies, repliesDiv); // Only one level of replies
+                displayReplies(comment.replies, repliesDiv);
 
                 commentCardBody.appendChild(repliesDiv);
             }
@@ -131,7 +143,11 @@
             replyHeader.classList.add('card-subtitle', 'mb-2', 'text-muted');
 
             let replyAuthorLabel = '';
-            if (reply.user_id === {{ $article->user->id }}) {
+            if (reply.user_id === {
+                    {
+                        $article - > user - > id
+                    }
+                }) {
                 replyAuthorLabel = `<span class="badge bg-primary ms-2">Author</span>`;
             }
 
