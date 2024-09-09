@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id'); //Not Null
-            $table->foreignId('article_id'); //Not null
-            $table->foreignId('comment_id'); //Nullable
-            $table->String('content'); //Not Null
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Ensures user integrity
+            $table->foreignId('article_id')->constrained()->onDelete('cascade'); // Ensures article integrity
+            $table->foreignId('parent_id')->nullable()->constrained('comments')->onDelete('cascade'); // Nullable for top-level comments
+            $table->string('content'); // Not Null
             $table->timestamps();
         });
     }

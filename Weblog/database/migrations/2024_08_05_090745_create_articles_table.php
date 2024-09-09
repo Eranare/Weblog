@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('content_file_path'); //Link to content saved in storage?
-            $table->foreignId('user_id');
-            $table->boolean('is_premium');
+            $table->string('content_file_path'); //Link to content saved in storage
+            $table->string('banner_image_path')->nullable(); //Image to be displayed on Home page.
+            $table->string('content_preview');
+            $table->foreignId('user_id'); //Author
+            $table->boolean('is_premium')->default(false);
+            $table->boolean('is_flagged_for_deletion')->default(false);
             $table->timestamps();
         });
     }

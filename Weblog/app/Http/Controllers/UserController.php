@@ -9,18 +9,17 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function showProfile(){
-
+    public function showProfile()
+    {
     }
 
-    public function editProfile(){
+    public function editProfile()
+    {
+    }
 
-        
+    public function becomeWriter()
+    {
     }
 }
 
-
-//Show User profile  name.
-//Show user profile info on edit page and allow editing.
-//update function.
-//Show UserPremium status. 
+//We dont quite use this one huh.
