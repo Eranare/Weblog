@@ -1,0 +1,6 @@
+TODO:
+- More Explicit model binding in controllers. 
+- Validate files for controllers instead of doing loosy goosy validations inside the controller functions.
+- Try shorten routes.
+- Hide/Unhide for Writer/ArticleController, could those be a single function instead? simple boolean switching after all.
+- 

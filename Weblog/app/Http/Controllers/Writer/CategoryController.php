@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Writer;
 use App\Models\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -33,7 +34,7 @@ class CategoryController extends Controller
 
         $category = new Category();
         $category->name = $request->name;
-        $category->user_id = auth()->id();
+        $category->user_id = Auth::id();
         $category->save();
 
         return redirect()->route('writer.categories.create')->with('success', 'Category created successfully');
